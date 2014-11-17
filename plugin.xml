@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    id="it.alfonsovinti.cordova.plugins.bixolonprint"
+    version="1.3.0">
+
+    <name>BixolonPrint</name>
+    <description>Printing on Bixolon print.</description>
+    <license>Apache 2.0</license>
+    <keywords>cordova,bixolonprint</keywords>
+
+    <author>Alfonso Vinti</author>
+
+    <engines>
+        <engine name="cordova" version=">=3.0.0" />
+    </engines>    
+
+    <js-module src="www/bixolonprint.js" name="BixolonPrint">
+        <clobbers target="cordova.plugins.bixolonPrint" />
+    </js-module>
+
+    <asset src="www/bixolonprint.js" target="bixolonprint.js" />
+
+    <!-- ios -->
+    <platform name="ios">
+        <!-- Cordova >= 2.8 -->
+        <config-file target="config.xml" parent="/*">
+            <feature name="BixolonPrint">
+                <param name="ios-package" value="CDVBixolonPrint" />
+            </feature>
+        </config-file>
+
+        <header-file src="src/ios/CDVBixolonPrint.h" />
+        <source-file src="src/ios/CDVBixolonPrint.m" />
+
+        <config-file target="*-Info.plist" parent="UISupportedExternalAccessoryProtocols">
+            <array>
+                <string>com.bixolon.protocol</string>
+            </array>
+        </config-file>
+
+        <!-- Bixolon framework -->
+        <source-file src="src/ios/lib/libBXSDK.a" framework="true"/>
+
+        <!-- System frameworks -->
+        <framework src="ExternalAccessory.framclearework"/>
+
+        <!-- Bixolon library header files -->
+        <header-file src="src/ios/lib/Headers/BXBarcodeInfo.h" target-dir="BixolonLib/Headers" />
+        <header-file src="src/ios/lib/Headers/BXCode.h" target-dir="BixolonLib/Headers" />
+        <header-file src="src/ios/lib/Headers/BXPrinterControlDelegate.h" target-dir="BixolonLib/Headers" />
+        <header-file src="src/ios/lib/Headers/BXPrinterController.h" target-dir="BixolonLib/Headers" />
+        <header-file src="src/ios/lib/Headers/BXPrinterObjects.h" target-dir="BixolonLib/Headers" />
+        <header-file src="src/ios/lib/Headers/Common.h" target-dir="BixolonLib/Headers" />
+        <header-file src="src/ios/lib/Headers/Defines.h" target-dir="BixolonLib/Headers" />
+        <header-file src="src/ios/lib/Headers/iControllerDelegate.h" target-dir="BixolonLib/Headers" />
+        <header-file src="src/ios/lib/Headers/InterfaceFunctionsDelegate.h" target-dir="BixolonLib/Headers" />
+        <header-file src="src/ios/lib/Headers/NetFunctionsDelegate.h" target-dir="BixolonLib/Headers" />
+        <header-file src="src/ios/lib/Headers/UDPServerDelegate.h" target-dir="BixolonLib/Headers" />
+
+    </platform>
+
+    <!-- android -->
+    <platform name="android">
+
+        <source-file src="src/android/BixolonPrint.java" target-dir="src/it/alfonsovinti/cordova/plugins/bixolonprint" />
+
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="BixolonPrint">
+                <param name="android-package" value="it.alfonsovinti.cordova.plugins.bixolonprint.BixolonPrint" />
+            </feature>
+        </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/manifest">
+            <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+            <uses-permission android:name="android.permission.BLUETOOTH" />
+            <uses-permission android:name="android.permission.WAKE_LOCK" />
+            <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+            <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
+            <uses-feature android:name="android.hardware.bluetooth" android:required="false" />
+            <uses-feature android:name="android.hardware.wifi" android:required="false" />
+        </config-file>
+
+        <source-file src="src/android/lib/BixolonPrinter.jar" target-dir="libs" framework="true"/>
+        <source-file src="src/android/lib/Bxlprint.jar" target-dir="libs" framework="true"/>
+        <source-file src="src/android/res/xml/device_filter.xml" target-dir="res/xml"/>
+    </platform>
+
+</plugin>
