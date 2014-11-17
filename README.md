@@ -18,8 +18,8 @@ The plugin creates the object `cordova/plugin/BixolonPrint` with following metho
 cordova.plugins.bixolonPrint.addLine({
     text       : String,    // text to print
     textAlign  : String,    // text align, default left
-    textWidth  : Integer,   // text width, default 0
-    textHeight : Integer,   // text height, default 0
+    textWidth  : int,       // text width, default 0
+    textHeight : int,       // text height, default 0
     fontType   : String,    // font type, A or B
     fontStyle  : String     // font style, bold or underlined or reversed
 });
@@ -34,13 +34,13 @@ cordova.plugins.bixolonPrint.addHr(simbol String);
 ### Print text lines
 
 ```javascript
-cordova.plugins.bixolonPrint.printText(successCallback, errorCallback, cutPaper Integer);
+cordova.plugins.bixolonPrint.printText(successCallback, errorCallback, cutPaper int);
 ```
 
 ### Cut paper
 
 ```javascript
-cordova.plugins.bixolonPrint.cutPaper(successCallback, errorCallback, lineNumber Integer);
+cordova.plugins.bixolonPrint.cutPaper(successCallback, errorCallback, lineNumber int);
 ```
 
 ### Get printer status
