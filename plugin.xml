@@ -43,7 +43,7 @@
         <source-file src="src/ios/lib/libBXSDK.a" framework="true"/>
 
         <!-- System frameworks -->
-        <framework src="ExternalAccessory.framclearework"/>
+        <framework src="ExternalAccessory.framework"/>
 
         <!-- Bixolon library header files -->
         <header-file src="src/ios/lib/Headers/BXBarcodeInfo.h" target-dir="BixolonLib/Headers" />
@@ -82,7 +82,7 @@
             <uses-feature android:name="android.hardware.wifi" android:required="false" />
         </config-file>
 
-        <source-file src="src/android/lib/BixolonPrinter.jar" target-dir="libs" framework="true"/>
+        <!--<source-file src="src/android/lib/BixolonPrinter.jar" target-dir="libs" framework="true"/>-->
         <source-file src="src/android/lib/Bxlprint.jar" target-dir="libs" framework="true"/>
         <source-file src="src/android/res/xml/device_filter.xml" target-dir="res/xml"/>
     </platform>
