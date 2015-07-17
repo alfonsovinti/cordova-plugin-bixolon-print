@@ -1,32 +1,104 @@
+/*
+ *
+ * Copyright (C) 2013 Alfonso Vinti <me@alfonsovinti.it>
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ *
+ */
 
 var BixolonPrintLoader = function (require, exports, module) {
 
+    /**
+     * @type {exports}
+     */
     var exec = require('cordova/exec');
 
+    /**
+     * BixolonPrint
+     * @constructor
+     */
     var BixolonPrint = function () {
 
-        this.version = "0.2.1";
+        /**
+         *
+         * @type {string}
+         */
+        this.version = "1.4.0";
 
+        /**
+         *
+         * @type {Array}
+         */
         this.textLines = [];
 
+        /**
+         *
+         * @type {{lineFeed: number, formFeed: boolean, autoConnect: boolean, toastMessage: boolean, separator: string, codePage: number}}
+         */
+        this.settings = {
+            lineFeed: 3,
+            formFeed: false,
+            autoConnect: true,   // Android only
+            toastMessage: true,  // Android only
+            separator: '=',
+            codePage: 16
+        };
+
+        /**
+         *
+         * @type {{LEFT: string, CENTER: string, RIGHT: string}}
+         */
         this.TextAlign = {
             LEFT   : 'left',
             CENTER : 'center',
             RIGHT  : 'right'
         };
 
+        /**
+         *
+         * @type {{A: string, B: string, C: string}}
+         */
         this.FontType = {
             A: 'A',
-            B: 'B'
+            B: 'B',
+            C: 'C'
         };
 
+        /**
+         *
+         * @type {{DEFAULT: string, BOLD: string, UNDERLINE: string, UNDERLINE2: string, REVERSE: string}}
+         */
         this.FontStyle = {
-            DEFAULT   : 'default',
-            BOLD      : 'bold',
-            UNDERLINE : 'underlined',
-            REVERSE   : 'reversed'
+            DEFAULT    : 'default',
+            BOLD       : 'bold',
+            UNDERLINE  : 'underline',
+            UNDERLINE2 : 'underline2',
+            REVERSE    : 'reversed'
         };
 
+        /**
+         *
+         * @type {{TD_0: number, TD_1: number, TD_2: number, TD_3: number, TD_4: number, TD_5: number, TD_6: number, TD_7: number}}
+         */
         this.TextDimension = {
             TD_0: 0,
             TD_1: 1,
@@ -37,20 +109,86 @@ var BixolonPrintLoader = function (require, exports, module) {
             TD_6: 6,
             TD_7: 7
         };
+
+        /**
+         *
+         * @type {{CP_437_USA: number, CP_KATAKANA: number, CP_850_MULTILINGUAL: number, CP_860_PORTUGUESE: number, CP_863_CANADIAN_FRENCH: number, CP_865_NORDIC: number, CP_1252_LATIN1: number, CP_866_CYRILLIC2: number, CP_852_LATIN2: number, CP_858_EURO: number, CP_862_HEBREW_DOS_CODE: number, CP_864_ARABIC: number, CP_THAI42: number, CP_1253_GREEK: number, CP_1254_TURKISH: number, CP_1257_BALTIC: number, CP_FARSI: number, CP_1251_CYRILLIC: number, CP_737_GREEK: number, CP_775_BALTIC: number, CP_THAI14: number, CP_1255_HEBREW_NEW_CODE: number, CP_THAI11: number, CP_THAI18: number, CP_855_CYRILLIC: number, CP_857_TURKISH: number, CP_928_GREEK: number, CP_THAI16: number, CP_1256_ARABIC: number, CP_1258_VIETNAM: number, CP_KHMER_CAMBODIA: number, CP_1250_CZECH: number}}
+         */
+        this.CodePage = {
+            CP_437_USA               : 0,
+            CP_KATAKANA              : 1,
+            CP_850_MULTILINGUAL      : 2,
+            CP_860_PORTUGUESE        : 3,
+            CP_863_CANADIAN_FRENCH   : 4,
+            CP_865_NORDIC            : 5,
+            CP_1252_LATIN1           : 16,
+            CP_866_CYRILLIC2         : 17,
+            CP_852_LATIN2            : 18,
+            CP_858_EURO              : 19,
+            CP_862_HEBREW_DOS_CODE   : 21,
+            CP_864_ARABIC            : 22,
+            CP_THAI42                : 23,
+            CP_1253_GREEK            : 24,
+            CP_1254_TURKISH          : 25,
+            CP_1257_BALTIC           : 26,
+            CP_FARSI                 : 27,
+            CP_1251_CYRILLIC         : 28,
+            CP_737_GREEK             : 29,
+            CP_775_BALTIC            : 30,
+            CP_THAI14                : 31,
+            CP_1255_HEBREW_NEW_CODE  : 33,
+            CP_THAI11                : 34,
+            CP_THAI18                : 35,
+            CP_855_CYRILLIC          : 36,
+            CP_857_TURKISH           : 37,
+            CP_928_GREEK             : 38,
+            CP_THAI16                : 39,
+            CP_1256_ARABIC           : 40,
+            CP_1258_VIETNAM          : 41,
+            CP_KHMER_CAMBODIA        : 42,
+            CP_1250_CZECH            : 43
+        };
     };
 
-    BixolonPrint.prototype.addHr = function (simbol) {
+    /**
+     * @param obj
+     * @returns {boolean}
+     * @private
+     */
+    BixolonPrint.prototype._isObject = function (obj) {
+        return typeof obj === 'object' && !!obj;
+    };
 
-        var sp = "=";
+    /**
+     *
+     * @param obj
+     * @returns {boolean}
+     * @private
+     */
+    BixolonPrint.prototype._isFunction = function (obj) {
+        return typeof obj === 'function';
+    };
 
-        if ((typeof simbol == 'string' || simbol instanceof String) && simbol.length == 1) {
-            sp = simbol;
+    /**
+     *
+     * @param separator
+     */
+    BixolonPrint.prototype.addHr = function (separator) {
+
+        // default separator
+        var sp = this.settings.separator;
+
+        if ((typeof separator == 'string' || separator instanceof String) && separator.length == 1) {
+            sp = separator;
+        } else if(!!separator) {
+            throw new Error("BixolonPrint.addHr failure: separator must be a string!");
         }
 
         this.addLine('[hr]' + sp);
     };
 
     /**
+     *
      * @param obj
      */
     BixolonPrint.prototype.addLine = function (obj) {
@@ -64,9 +202,9 @@ var BixolonPrintLoader = function (require, exports, module) {
             fontStyle  : this.FontStyle.DEFAULT
         };
 
-        if ( typeof obj == 'string' || obj instanceof String ) {
+        if (typeof obj == 'string' || obj instanceof String) {
             rObj.text = obj;
-        } else if ( obj.text ) {
+        } else if (this._isObject(obj) && (typeof obj.text == 'string' || obj.text instanceof String)) {
             for (var key in obj) {
                 if (obj.hasOwnProperty(key)) {
                     switch (key) {
@@ -97,42 +235,52 @@ var BixolonPrintLoader = function (require, exports, module) {
                 }
             }
         } else {
-            console.error("BixolonPrint.addLines failure: rObj.text parameter not found!");
-            return;
+            throw new Error("BixolonPrint.addLine failure: text parameter not found!");
         }
 
         this.textLines.push(rObj);
     };
 
-    BixolonPrint.prototype.printText = function (successCallback, errorCallback, cutPaper) {
+    /**
+     *
+     * @param successCallback
+     * @param errorCallback
+     * @param config
+     */
+    BixolonPrint.prototype.printText = function (successCallback, errorCallback, config) {
 
-        if (successCallback === null) {
+        if (!this._isFunction(successCallback)) {
             successCallback = function (response) {
                 console.log('BixolonPrint.printText success: ' + response);
             };
         }
 
-        if (errorCallback === null) {
+        if (!this._isFunction(errorCallback)) {
             errorCallback = function (error) {
-                console.error('BixolonPrint.printText failure: ' + error);
+                console.warn('BixolonPrint.printText failure: ' + error);
             };
         }
 
-        if (typeof errorCallback != "function") {
-            console.error("BixolonPrint.printText failure: failure parameter not a function");
-            return;
-        }
+        var printConfig = this.settings,
+            textLines = this.textLines;
 
-        if (typeof successCallback != "function") {
-            console.error("BixolonPrint.printText failure: success callback parameter must be a function");
-            return;
-        }
-
-        var textLines = this.textLines;
         this.textLines = [];
+        config = config || {};
 
-        if(!cutPaper || !(parseInt(cutPaper) === cutPaper && cutPaper > 0) ) {
-            cutPaper = 5;
+        if(!this._isObject(config)) {
+            throw new Error("BixolonPrint.printText failure: config parameter must be a object!");
+        }
+
+        if(config.lineFeed && parseInt(config.lineFeed) === config.lineFeed && config.lineFeed > 0) {
+            printConfig.lineFeed = config.lineFeed
+        }
+
+        if(config.formFeed === false || config.formFeed === true) {
+            printConfig.formFeed = config.formFeed;
+        }
+
+        if (config.codePage && parseInt(config.codePage) >= 0) {
+            printConfig.codePage = config.codePage;
         }
 
         exec(
@@ -140,7 +288,7 @@ var BixolonPrintLoader = function (require, exports, module) {
             errorCallback,
             "BixolonPrint",
             "printText",
-            [textLines, cutPaper]
+            [textLines, printConfig]
         );
     };
 
@@ -148,40 +296,44 @@ var BixolonPrintLoader = function (require, exports, module) {
      *
      * @param successCallback
      * @param errorCallback
-     * @param lineNumber
+     * @param config
      */
-    BixolonPrint.prototype.cutPaper = function (successCallback, errorCallback, lineNumber) {
+    BixolonPrint.prototype.cutPaper = function (successCallback, errorCallback, config) {
 
-        if (successCallback === null) {
+        if (!this._isFunction(successCallback)) {
             successCallback = function (response) {
                 console.log('BixolonPrint.cutPaper success: ' + response);
             };
         }
 
-        if (errorCallback === null) {
+        if (!this._isFunction(errorCallback)) {
             errorCallback = function (error) {
-                console.error('BixolonPrint.cutPaper failure: ' + error);
+                console.warn('BixolonPrint.cutPaper failure: ' + error);
             };
         }
 
-        if (typeof errorCallback != "function") {
-            console.error("BixolonPrint.cutPaper failure: failure parameter not a function");
-            return;
+        var printConfig = this.settings;
+
+        config = config || {};
+
+        if (!this._isObject(config)) {
+            throw new Error("BixolonPrint.cutPaper failure: config parameter must be a object!");
         }
 
-        if (typeof successCallback != "function") {
-            console.error("BixolonPrint.cutPaper failure: success callback parameter must be a function");
-            return;
+        if (config.lineFeed && parseInt(config.lineFeed) === config.lineFeed && config.lineFeed > 0) {
+            printConfig.lineFeed = config.lineFeed
         }
 
-        if( !lineNumber ) lineNumber = 5;
+        if (config.formFeed === false || config.formFeed === true) {
+            printConfig.formFeed = config.formFeed;
+        }
 
         exec(
             successCallback,
             errorCallback,
             "BixolonPrint",
             "cutPaper",
-            [lineNumber]
+            [printConfig]
         );
     };
 
@@ -193,39 +345,39 @@ var BixolonPrintLoader = function (require, exports, module) {
      */
     BixolonPrint.prototype.getStatus = function (successCallback, errorCallback, printStatus) {
 
-        if (successCallback === null) {
+        if (!this._isFunction(successCallback)) {
             successCallback = function (response) {
                 console.log('BixolonPrint.getStatus success: ' + response);
             };
         }
 
-        if (errorCallback === null) {
+        if (!this._isFunction(errorCallback)) {
             errorCallback = function (error) {
                 console.error('BixolonPrint.getStatus failure: ' + error);
             };
         }
 
-        if (typeof errorCallback != "function") {
-            console.error("BixolonPrint.getStatus failure: failure parameter not a function");
-            return;
+        if(!printStatus) printStatus = false;
+
+        if (!(printStatus === true || printStatus === false)) {
+            throw new Error("BixolonPrint.getStatus failure: printStatus parameter must be a bool!");
         }
 
-        if (typeof successCallback != "function") {
-            console.error("BixolonPrint.getStatus failure: success callback parameter must be a function");
-            return;
-        }
-
-        if( !printStatus ) printStatus = false;
+        var printConfig = this.settings;
 
         exec(
             successCallback,
             errorCallback,
             "BixolonPrint",
             "getStatus",
-            [printStatus]
+            [printStatus, printConfig]
         );
     };
 
+    /**
+     *
+     * @type {BixolonPrint}
+     */
     module.exports = new BixolonPrint();
 };
 
