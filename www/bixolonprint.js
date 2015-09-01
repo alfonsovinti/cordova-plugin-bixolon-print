@@ -382,4 +382,4 @@ var BixolonPrintLoader = function (require, exports, module) {
 };
 
 BixolonPrintLoader(require, exports, module);
-cordova.define("cordova/plugin/BixolonPrint", BixolonPrintLoader );
+cordova.define("cordova/plugins/BixolonPrint", BixolonPrintLoader );
