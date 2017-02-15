@@ -48,4 +48,15 @@
 - (void)message:(BXPrinterController *)controller
 		   text:(NSString *)text;
 
+
+
+- (void)outputComplete:(BXPrinterController*) controller
+              outputID:(NSNumber*) outputID
+           errorStatus:(NSNumber*) errorStatus;
+
+
+- (void)errorEvent:(BXPrinterController*) controller
+       errorStatus:(NSNumber*) errorStatus;
+
+- (void)targetPrinterPaired:(BXPrinterController*) controller;
 @end

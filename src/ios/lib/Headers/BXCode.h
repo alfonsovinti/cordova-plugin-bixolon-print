@@ -6,12 +6,13 @@
  *
  */
 #define DOT_LENGTH_203dpi_4inch   832   // 104mm * 8dot
+#define DOT_LENGTH_203dpi_3inchII 640   //  80mm * 8dot
 #define DOT_LENGTH_203dpi_3inch   576   //  72mm * 8dot
 #define DOT_LENGTH_203dpi_2inch   384   //  48mm * 8dot
 
 #define DOT_LENGTH_180dpi_3inch   512
 
-#define DOT_LENGTH_160dpi_3inch   400 
+#define DOT_LENGTH_160dpi_3inch   400
 
 
 #define	R300_DOT_LENGTH			DOT_LENGTH_203dpi_3inch //576
@@ -27,6 +28,7 @@
 
 
 //  Model ID Define
+#define	BXL_MODEL_ID_SPPR200III				0x12000003        //+ 03(III)
 #define	BXL_MODEL_ID_SPPR200II				0x12000002        //+ 02(II)
 //#define	BXL_MODEL_ID_EM220II				0x12001002        //+ 02(II)
 #define	BXL_MODEL_ID_SPPR300				0x13000000
@@ -34,7 +36,8 @@
 #define	BXL_MODEL_ID_SPPR210				0x12100000
 
 // 350계열
-#define	BXL_MODEL_ID_SRP340				0x23400000        // 340
+#define	BXL_MODEL_ID_SRP330                 0x23300000        // 330
+#define	BXL_MODEL_ID_SRP340                 0x23400000        // 340
 #define	BXL_MODEL_ID_SRP350II				0x23500002        // 350  +  02(II)
 #define	BXL_MODEL_ID_SRP350plus				0x23507000        // p:0x70
 #define	BXL_MODEL_ID_SRP352plus				0x23527000        // p:0x70
@@ -49,12 +52,25 @@
 #define	BXL_MODEL_ID_SRP352plusIII			0x23527003        // 350 + [p:0x70]  +  03(III)
 
 // Dot
-#define	BXL_MODEL_ID_SRP275				0x32750000        // 275
+#define	BXL_MODEL_ID_SRP275                 0x32750000        // 275
+#define	BXL_MODEL_ID_SRP275III				0x32750003        // 275 + 03(III)
 
 // 310계열
 #define	BXL_MODEL_ID_SRPF310				0x93100000
 #define	BXL_MODEL_ID_SRPF312				0x93120000
 
+// 310II 계열
+#define	BXL_MODEL_ID_SRPF310II				0x93100002     // 72mm, 180dpi
+#define	BXL_MODEL_ID_SRPF312II				0x93120002     // 72mm, 203dpi
+#define	BXL_MODEL_ID_SRPF313II				0x93130002     // 80mm, 203dpi
+
+// 310 계열 추가
+#define	BXL_MODEL_ID_SPPR310				0x13100000
+#define	BXL_MODEL_ID_SPPR318				0x13180000
+
+//  380 계열
+#define	BXL_MODEL_ID_SRP380                 0x83800000
+#define	BXL_MODEL_ID_SRP382                 0x83820000
 
 
 //////////////////////////////////////////////////////////////////
@@ -99,7 +115,7 @@
 
 
 //////////////////////////////////////////////////////////////////
-//Result Code 
+//Result Code
 #define BXL_SUCCESS				0
 
 #define BXL_responseBuffer_EMPTY	1
@@ -136,7 +152,7 @@
 #define BXLMSR_DATAEMPTY		603
 #define	BXLMSR_NOTFINISHED		604
 
-// mask of do to check printer status  
+// mask of do to check printer status
 #define BXL_MASK_DEFAULT		0x00	// Only Printer ID
 #define	BXL_MASK_COVERSTATUS	0x01
 #define BXL_MASK_PAPERSTATUS	0x02
@@ -148,7 +164,7 @@
 
 
 //Printer Status flag
-#define BXL_STS_NORMAL			0x0000		//0	
+#define BXL_STS_NORMAL			0x0000		//0
 #define BXL_STS_PAPEREMPTY		0x0001		//1
 #define BXL_STS_COVEROPEN		0x0002		//2
 #define BXL_STS_POWEROVER		0x0004		//4
@@ -160,6 +176,7 @@
 #define	BXL_STS_OFFLINE			0x0100		//256
 #define	BXL_STS_CASHDRAWER_OPEN	0x0200		//512
 #define BXL_STS_MSR_CANCEL		0xFFF7
+#define BXL_STS_NOT_CONNECTED   0xFFFFFFFF  //  -1
 
 //added status flag SMART CARD IC
 //#define BXL_STS_IC_ON		256
@@ -173,7 +190,7 @@
 // Connection Type
 #define BXL_CONNECTIONCLASS_WIFI            0x0000
 #define BXL_CONNECTIONCLASS_ETHERNET        0x0001
-#define BXL_CONNECTIONCLASS_BT              0x0002 
+#define BXL_CONNECTIONCLASS_BT              0x0002
 #define BXL_CONNECTIONCLASS_USB             0x0003  // current not support
 #define BXL_CONNECTIONCLASS_LPT             0x0004  // current not support
 #define BXL_CONNECTIONCLASS_SERIAL          0x0005  // current not support
@@ -298,7 +315,7 @@
 
 //////////////////////////////////////////////////////////////////////////
 //Text Attribute
-// 8 7 6 5 4 3  2      1 
+// 8 7 6 5 4 3  2      1
 //             BOLD   FONT AorB
 //Font Attribute 기본 값 : not Bold, FontA, not Underline, not reverse
 
@@ -322,7 +339,7 @@
 #define BXL_TS_6WIDTH			96
 #define BXL_TS_7WIDTH			112
 
-#define BXL_TS_0HEIGHT			0	
+#define BXL_TS_0HEIGHT			0
 #define BXL_TS_1HEIGHT			1
 #define BXL_TS_2HEIGHT			2
 #define BXL_TS_3HEIGHT			3
@@ -347,8 +364,8 @@
 // BARCODE SYMBOLOGY
 //////////////////////////////////////////////////////////////////////////
 #define BXL_BCS_PDF417			200
-#define BXL_BCS_QRCODE_MODEL2	202 
-#define BXL_BCS_QRCODE_MODEL1	203 
+#define BXL_BCS_QRCODE_MODEL2	202
+#define BXL_BCS_QRCODE_MODEL1	203
 #define BXL_BCS_DATAMATRIX		204 //2009 4 15 added
 #define BXL_BCS_MAXICODE_MODE2	205 //2009 4 15 updated
 #define BXL_BCS_MAXICODE_MODE3	206 //2009 4 15 updated
@@ -386,7 +403,7 @@
 #define BXL_BC_TEXT_BELOW		2
 
 
-//MSR Mode 
+//MSR Mode
 #define BXL_MSRMODE_CMDTRACK12		0
 #define BXL_MSRMODE_CMDTRACK23		1
 #define BXL_MSRMODE_AUTOTRACK1		2

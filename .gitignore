@@ -1,2 +1,4 @@
-# Created by .gitignore support plugin (hsz.mobi)
+Icon
+._*
+*.DS_Store
 cordova-plugin-bixolon-print.iml

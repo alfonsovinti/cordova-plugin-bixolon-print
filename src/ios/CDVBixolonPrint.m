@@ -314,7 +314,7 @@
                                  @"BIXOLON",  @"manufacturer",
                                  modelStr,    @"printerModel",
                                  nameStr,     @"printerName",
-                                 macAddress,  @"printerAddress"
+                                 [macAddress uppercaseString],  @"printerAddress"
                                  , nil];
         
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:jsonObj];
@@ -385,6 +385,7 @@
                 @"SPP-350IIK"    : @0,
                 @"SPP-R200II"    : @0,
                 @"SPP-R300"      : @48,
+                @"SPP-R310"      : @48,
                 @"SPP-R400"      : @69,
             };
     

@@ -66,6 +66,9 @@ typedef unsigned char		byte;
 typedef unsigned short		UINT16;
 typedef unsigned int		UINT32;
 typedef unsigned char		UINT8;
+typedef unsigned short		*PUINT16;
+typedef unsigned int		*PUINT32;
+typedef unsigned char		*PUINT8;
 
 
 
@@ -158,6 +161,9 @@ typedef struct
     NSInteger                 paperSaveModeCuttingCorrection;
     NSInteger                 print2InchMode;
     
+    NSInteger                 internalBuzzer;
+    NSInteger                 externalBuzzer;
+    NSInteger                 upsideDownMode;
 
 } _BXPrinterSettingConfigrationStruct;
 	

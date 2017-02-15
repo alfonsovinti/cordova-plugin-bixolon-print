@@ -34,4 +34,10 @@
 				status:(NSNumber*) status;
 
 
+- (void)outputComplete:(iController*) controller
+              outputID:(NSNumber*) outputID
+           errorStatus:(NSNumber*) errorStatus;
+
+
+- (void)targetPrinterPaired:(iController*) controller;
 @end

@@ -41,7 +41,6 @@
 @property (assign, nonatomic)				NSInteger		AutoConnection;
 @property (assign, nonatomic)				NSInteger		barcodeSupportRange;
 
-
 @property (assign, nonatomic)				id<BXPrinterControlDelegate>	delegate;
 @property (assign, nonatomic)               BXPrinter       *target;
 
@@ -75,6 +74,7 @@
 @property (assign, nonatomic)				CGFloat			pendingWaitTime;
 @property (assign, nonatomic)               BOOL            imageDitheringWithIgnoreWhite;
 
+
 + (BXPrinterController *)getInstance;
 
 - (void)open;
@@ -97,60 +97,85 @@
 - (long)checkPrinter:(NSInteger)mask;
 
 
-// 프린터와의 TCP 연결하기/연결끊기/연결 확인
+// Printer 에 접속
 - (BOOL)connect;
+
+//  즉시 Disconnect
 - (void)disconnect;
+
+//  SDK 전송 버퍼에 Data가 남아있는 경우 timeout 시간까지 대기 후 Disconnect
 - (long)disconnectWithTimeout:(NSInteger)timeout;
 
+//  Timeout 기능은 위와 같으나, 전송버퍼를 모두 비운 후 'afterSleep'만큼 무조건 대기 후 disconnect
 - (long)disconnectWithTimeout:(NSInteger)timeout
                    afterSleep:(NSInteger)afterSleep;
 
+//  연결 상태 확인
 - (BOOL)isConnected;
 
-- (NSInteger)recvValue:(void *)bytes size:(NSInteger)size;
 
 // 텍스트 처리
 - (long)printText:(NSString *)string;
+
+//  width(단위:line) * height(단위:1글자) 크기의 사각형 영역을 출력. (PageMode에서는 지원되지 않음)
 - (long)printBox:(NSInteger)width height:(NSInteger)height;
+
+//  lines에 입력 된 숫자 만큼 용지를 Feeding
 - (long)lineFeed:(NSInteger)lines;
+
+//   Label용지 인 경우 다음 인쇄 위치까지 용지를 Feeding
 - (long)nextPrintPos;
+
+//  Auto cutter 가 지원되는 모델의 경우 용지를 컷팅함.
 - (long)cutPaper;
 
-// 바코드 처리
+// 바코드 출력
 - (long)printBarcode:(char *)bytes
 		   symbology:(long)symbology
 			   width:(long)width
 			  height:(long)height;
 
-
+// 바코드 출력(GS1Databar  Type 확장)
 - (long)printBarcode:(char *)bytes
            symbology:(long)symbology
                width:(long)width
               height:(long)height
-   heightOfSeparator:(long)heightOfSeparator;  //  GS1Databar  Type 확장
+   heightOfSeparator:(long)heightOfSeparator;
 
-// 이미지 처리
+// PDF 인쇄
 - (long)printPDF:(NSString *)path
       pageNumber:(NSInteger)pageNumber
            width:(long)width
            level:(long)level;
 
+// Image 인쇄 (경로지정)
 - (long)printBitmap:(NSString *)path
 			  width:(long)width
 			  level:(long)level;
 
+// Image 인쇄 (UIImage이용)
 - (long)printBitmapWithImage:(UIImage *)image 
 			  width:(long)width 
 			  level:(long)level;
 
-// NV Images
+// 프린터의 NV 영역의 'address'에 저장되어있는 이미지를 삭제
 - (long)removeNVImage:(NSInteger)address;
+
+// 프린터의 NV 영역에 저장되어있는 모든 이미지를 삭제
 - (long)removeAllNVImages;
+
+// 프린터의 NV 영역의 저장되어있는 Address List를 확인
 - (long)nvImageList:(NSArray **)images;
+
+// 프린터의 NV 영역의 'address'에 이미지를 저장
 - (long)downloadNVImage:(NSInteger)address withImage:(UIImage *)image;
+
+// 프린터의 NV 영역의 'address'에 이미지를 저장 (밝기 조절 가능)
 - (long)downloadNVImage:(NSInteger)address withImage:(UIImage *)image
 				  width:(long)width 
 				  level:(long)level;
+
+// 프린터의 NV 영역의 'address'에 저장되어있는 이미지를 출력
 - (long)printNVImage:(NSInteger)address;
 
 
@@ -187,7 +212,8 @@
 
 - (long)enableLSB:(BOOL)bEnable;
 - (long)enableUpsideDownMode:(BOOL)bEnable;
-- (long) setLabelMode:(BOOL)bEnable;
+- (long)setLabelMode:(BOOL)bEnable;
+
 
 // 지원 여부 리턴
 - (BOOL) isSupport_Barcode;
@@ -197,6 +223,7 @@
 - (BOOL) isSupport_CashDrawer;
 - (BOOL) isSupport_LSB;
 - (BOOL) isSupport_PrinterConfig;
+- (NSInteger) isSupport_NVImage;
 - (NSMutableArray*)  getBarcodeSupportTable;
 
 
@@ -227,6 +254,14 @@
 - (long)setLeftPosition:(NSInteger)positionX;
 - (long)setVerticalPosition:(NSInteger)positionY;
 
-- (long)printDataInPageMode;
+- (long)printDataInPageMode; 
+
+
+
+- (long)transactionMode:(BOOL)bSet; //  YES: 버퍼에 저장   NO: 인쇄
+- (long)asyncMode:(BOOL)bSet;
+
+-(void) setTimeoutOnConnection:(CGFloat)timeoutOnConnection;
+
 
 @end

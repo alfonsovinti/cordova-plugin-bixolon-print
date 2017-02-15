@@ -95,6 +95,7 @@ public class BixolonPrint extends CordovaPlugin {
         put("SRP-350IIK", 0);
         put("SPP-R200II", 0);
         put("SPP-R300", 48);
+        put("SPP-R310", 48);
         put("SPP-R400", 69);
     }};
 

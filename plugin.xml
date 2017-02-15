@@ -2,7 +2,7 @@
 <plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
     xmlns:android="http://schemas.android.com/apk/res/android"
     id="it.alfonsovinti.cordova.plugins.bixolonprint"
-    version="1.4.0">
+    version="1.4.1">
 
     <name>BixolonPrint</name>
     <description>Printing on Bixolon print.</description>
@@ -63,6 +63,8 @@
     <!-- android -->
     <platform name="android">
 
+        <dependency id="cordova-plugin-android-support-v4"/>
+
         <source-file src="src/android/BixolonPrint.java" target-dir="src/it/alfonsovinti/cordova/plugins/bixolonprint" />
 
         <config-file target="res/xml/config.xml" parent="/*">
@@ -72,17 +74,23 @@
         </config-file>
 
         <config-file target="AndroidManifest.xml" parent="/manifest">
-            <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-            <uses-permission android:name="android.permission.BLUETOOTH" />
-            <uses-permission android:name="android.permission.WAKE_LOCK" />
-            <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-            <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+            <uses-permission android:name="android.permission.BLUETOOTH"/>
+            <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+            <uses-permission android:name="android.permission.INTERNET"/>
+            <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+            <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+            <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE"/>
+            <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+            <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+            <uses-permission android:name="android.permission.WAKE_LOCK"/>
+            <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+            <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
-            <uses-feature android:name="android.hardware.bluetooth" android:required="false" />
-            <uses-feature android:name="android.hardware.wifi" android:required="false" />
+            <uses-feature android:name="android.hardware.bluetooth" android:required="false"/>
+            <uses-feature android:name="android.hardware.wifi" android:required="false"/>
+            <uses-feature android:name="android.hardware.usb.host" android:required="false"/>
         </config-file>
 
-        <source-file src="src/android/libs/android-support-v4.jar" target-dir="libs" framework="true"/>
         <source-file src="src/android/libs/BixolonPrinter.jar" target-dir="libs" framework="true"/>
         <source-file src="src/android/res/xml/device_filter.xml" target-dir="res/xml"/>
     </platform>
